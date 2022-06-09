@@ -4,6 +4,10 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    jasper-url: '%env(JASPER_URL)%'
+    jasper-username: '%env(JASPER_USERNAME)%'
+    jasper-password: '%env(JASPER_PASSWORD)%'
+    jasper-report-path: '%env(JASPER_REPORT_PATH)%'
 
 services:
     # default configuration for services in *this* file
