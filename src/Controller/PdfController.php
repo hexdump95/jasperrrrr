@@ -2,17 +2,13 @@
 
 namespace App\Controller;
 
-use DateTime;
-use DateTimeInterface;
 use Jaspersoft\Client\Client;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @author Sergio Villanueva <sergiovillanueva@protonmail.com>
- */
 class PdfController extends AbstractController
 {
     private Client $jasperClient;
@@ -29,18 +25,18 @@ class PdfController extends AbstractController
     }
 
     #[Route('/pdf', name: 'pdf', methods: ['GET'])]
-    public function index(): Response
+    public function index(LoggerInterface $log): Response
     {
-
+        $log->debug("Trying to get pdf");
         $report = $this->jasperClient->reportService()->runReport($this->params->get('jasper-report-path'));
 
         $dateTime = new \DateTime;
-        return new Response($report, 200, array(
+        return new Response($report, Response::HTTP_OK, [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'attachment; filename="report-' . $dateTime->format('Y-m-d\TH:i:s.z\Z') . '.pdf"'
-            )
+                'Content-Disposition' => 'attachment; filename="report-' . $dateTime->format('Y-m-d\TH-i-s.z\Z') . '.pdf"',
+                'Content-Description' => ' File Transfer',
+            ]
         );
     }
-
 
 }
